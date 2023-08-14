@@ -1,0 +1,35 @@
+1. Mono.subscribe contains first the value , followed by Error and finally completed
+2. Use Mono.just if you have data in your hands otherwise go for Mono fromSupplier or MonofromCallable .
+3. To make call Async - Use subscribeOn(Schedulers.boundElastic()).
+4. Mono from future -> We are using util.sleep till the callable future is returning value.
+5. Stream terminal operations can be used only once ( Same with Flux.fromStream() -> if we again try to use the same it will throw exception.)
+6. Use Flux.interval in case you want to get periodic data such as Stock Market price.
+7. When you want to convert one publisher to another such as mono to Flux  use Flux.from(monoObject).
+8. Flux to Mono --> use .next() Ex Flux.range(1,10).next().subscribe()
+9. Flux.fromStream(Supplier) --> to Use Terminal operation more than once.
+10. In case of custom subscription use subscription.request(No. of items you want) to get the Data.
+
+Example of Creating Flux :
+Integer a[] = {1,2,3,4};
+int[] vb ={5,6,7,8};
+
+Flux<Integer> flux1 = Flux.just(1);
+Flux<Integer> flux2 = Flux.fromArray(a);
+Flux<Integer> flux3 = Flux.fromStream(()-> Arrays.stream(a));
+Flux<Long> flux4 = Flux.interval(Duration.ofSeconds(1)); // Not getting any result
+Flux<Integer> flux5 = Flux.range(2, 10);
+
+11. Ways of Creating Flux Programmatically (Or based on Conditions )
+Flux.create(fluxSink ->
+fluxsink.create() --- used for creating n number of items
+fluxSink.complete --- to End the Flux Creation .
+12 . Take operator is just a operator like map . For ex flux.take(3) means it will take 3 items.
+13. There is a limitation with take operator in flux.take as it it don't cancel on take operator and solution is we have to check like !fluxSink.isCancelled().
+14. Another way of generating Flux is Flux.generate(synchronousink -> {
+ss.next() // This will keep on emitting items.
+}
+--> We can use take to limit the number of items.
+--> We can use if loop and synchsink.complete() inside the if condition.
+
+15. Study flux.generate state maintenance for counter(loop) problems.
+16.
