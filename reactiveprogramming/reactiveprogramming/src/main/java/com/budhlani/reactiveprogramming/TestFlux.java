@@ -1,13 +1,13 @@
 package com.budhlani.reactiveprogramming;
 
 import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TestFlux {
 
@@ -26,22 +26,27 @@ public class TestFlux {
         Flux<Long> flux4 = Flux.interval(Duration.ofSeconds(1)); // Not getting any result
         Flux<Integer> flux5 = Flux.range(2, 10);
         TestFlux obj = new TestFlux();
-
+       String ans = null;
 
 
         obj.getData()
                 .doOnComplete(() -> latch.countDown())
                 .doOnError(throwable -> System.out.println(throwable.getMessage()))
-                .subscribe(s-> {
-                    if(s>106 || s < 100){
-                        latch.countDown();
-                    }
-                    else{
-                        System.out.println(s);
-                    }
-                        },
-                err-> System.out.println(err),
-                () -> System.out.println("completed"));
+                .map(value -> {
+                    //ans = value;
+                    return value;
+                })
+                .subscribe();
+//                .subscribe(s-> {
+//                    if(s>106 || s < 100){
+//                        latch.countDown();
+//                    }
+//                    else{
+//                        ans = s.toString();
+//                    }
+//                        },
+//                err-> System.out.println(err),
+//                () -> System.out.println("completed"));
         try {
             latch.await();
         } catch (InterruptedException e) {

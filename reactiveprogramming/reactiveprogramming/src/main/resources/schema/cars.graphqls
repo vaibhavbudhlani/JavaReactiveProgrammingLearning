@@ -1,0 +1,17 @@
+type Query{
+    cars : [Cars]
+}
+
+type Cars {
+   id : Int
+    name: String
+    status : Status
+    effectiveDate: String
+    expiryDate : String
+
+}
+
+enum Status {
+    Booked
+    NotBooked
+}

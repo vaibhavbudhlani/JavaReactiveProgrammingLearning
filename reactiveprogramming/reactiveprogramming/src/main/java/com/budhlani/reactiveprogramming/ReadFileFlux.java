@@ -8,10 +8,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 
 public class ReadFileFlux {
 
@@ -20,10 +23,12 @@ public class ReadFileFlux {
 
     public static void main(String[] args) {
         ReadFileFlux readFileFlux = new ReadFileFlux();
+        System.out.println(Arrays.stream(new Integer[]{1, 2, 3, 4}).filter(ReadFileFlux::filterItems)
+                .map(ReadFileFlux::mapping).reduce((a,b) -> a+b).get());
 
         readFileFlux.getFileContent()
                 //   .take(1)
-                .subscribe(s -> System.out.println(s));
+                .subscribe(System.out::println);
     }
 
     private Callable<BufferedReader> getBuffereader() {
@@ -68,5 +73,24 @@ public class ReadFileFlux {
                 throw new RuntimeException(e);
             }
         });
+
+
+    }
+
+    private static Predicate<Integer> getIntPredicate() {
+
+        return vb -> vb > 2;
+    }
+
+    private static Boolean filterItems(int value){
+           return value > 3;
+    }
+
+    private static Integer mapping(int value){
+         return value *3;
+    }
+
+    private Consumer<Integer> consumer(){
+        return integer -> System.out.println(integer);
     }
 }
